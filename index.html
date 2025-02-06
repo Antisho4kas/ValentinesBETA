@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>День святого Валентина</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ffccd5;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            width: fit-content;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: #d6336c;
+            margin-top: 20px;
+            font-size: 28px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .love-gif {
+            display: block;
+            margin: 20px auto;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .love-gif:hover {
+            transform: scale(1.05);
+        }
+
+        input {
+            padding: 12px 20px;
+            font-size: 18px;
+            border: 2px solid #d6336c;
+            border-radius: 25px;
+            outline: none;
+            width: 250px;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        input:focus {
+            border-color: #a61e4d;
+            box-shadow: 0 0 10px rgba(214, 51, 108, 0.3);
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px 30px;
+            font-size: 18px;
+            color: white;
+            background-color: #d6336c;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #a61e4d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #emojiContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .emoji {
+            width: 30px;
+            height: 30px;
+            pointer-events: none;
+            user-select: none;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        @keyframes sway {
+            0% { transform: translateX(0px) rotate(0deg); }
+            50% { transform: translateX(15px) rotate(5deg); }
+            100% { transform: translateX(0px) rotate(0deg); }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 16px;
+            margin-top: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .error-message.show {
+            opacity: 1;
+        }
+    </style>
+    <script>
+        function getRandomImage() {
+            const images = [
+                'rngimg/1.jpg',
+                'rngimg/2.jpg',
+                'rngimg/3.jpg',
+                'rngimg/4.jpg',
+                'rngimg/5.jpg',
+                'rngimg/6.jpg',
+                'rngimg/7.jpg',
+                'rngimg/8.jpg',
+                'rngimg/9.jpg',
+                'rngimg/10.jpg'
+            ];
+            return images[Math.floor(Math.random() * images.length)];
+        }
+
+        function openRandomImage() {
+            const imgPath = getRandomImage();
+            const imgWindow = window.open('', '_blank');
+            imgWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>💕</title>
+                    <style>
+                        body {
+                            margin: 0;
+                            padding: 0;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            min-height: 100vh;
+                            background-color: #000;
+                        }
+                        img {
+                            max-width: 100%;
+                            max-height: 100vh;
+                            object-fit: contain;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <img src="${imgPath}" alt="Love Image">
+                </body>
+                </html>
+            `);
+            imgWindow.document.close();
+        }
+    </script>
+</head>
+<body>
+    <div id="emojiContainer"></div>
+
+    <div class="container">
+        <h1>Введите имя любимого человека:</h1>
+        <img src="softie-egirl.gif" alt="Love GIF" class="love-gif">
+        <div class="input-group">
+            <input type="text" id="nameInput" placeholder="Введите имя..." maxlength="30">
+            <div id="errorMessage" class="error-message">Пожалуйста, введите имя</div>
+            <button onclick="createLovePage()">Создать страницу</button>
+        </div>
+    </div>
+
+    <script>
+        const emojis = [
+            "https://cdn.discordapp.com/emojis/1293988399656603648.webp?size=128",
+            "https://cdn.discordapp.com/emojis/1293988494330564660.webp?size=128",
+            "https://cdn.discordapp.com/emojis/1242363293146812438.webp?size=128",
+            "https://cdn.discordapp.com/emojis/1082791244016648202.webp?size=128",
+            "https://cdn.discordapp.com/emojis/1242362270302867496.webp?size=128",
+            "https://cdn.discordapp.com/emojis/1293988643446198403.webp?size=128",
+            "https://cdn.discordapp.com/emojis/1082788682706210916.webp?size=128&animated=true",
+            "https://cdn.discordapp.com/emojis/1074987060525551636.webp?size=128&animated=true"
+        ];
+        
+        let emojiElements = [];
+        let animationFrameId;
+        
+        function createEmoji() {
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            const div = document.createElement("div");
+            const img = document.createElement("img");
+            img.src = emoji;
+            img.classList.add("emoji");
+            div.appendChild(img);
+            
+            const x = Math.random() * (window.innerWidth - 30);
+            div.style.left = x + 'px';
+            div.style.top = '-30px';
+            div.style.position = 'absolute';
+            
+            const speed = 2 + Math.random() * 3;
+            const swayDuration = 2 + Math.random() * 2;
+            div.style.animation = `sway ${swayDuration}s ease-in-out infinite`;
+            
+            document.getElementById("emojiContainer").appendChild(div);
+            
+            return {
+                element: div,
+                speed: speed,
+                x: x,
+                y: -30
+            };
+        }
+        
+        function updateEmojis() {
+            const screenHeight = window.innerHeight;
+            
+            emojiElements = emojiElements.filter(emojiObj => {
+                emojiObj.y += emojiObj.speed;
+                emojiObj.element.style.top = emojiObj.y + 'px';
+                
+                if (emojiObj.y > screenHeight) {
+                    emojiObj.element.remove();
+                    return false;
+                }
+                return true;
+            });
+            
+            if (Math.random() < 0.1 && emojiElements.length < 50) {
+                emojiElements.push(createEmoji());
+            }
+            
+            animationFrameId = requestAnimationFrame(updateEmojis);
+        }
+        
+        function startEmojiRain() {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+            emojiElements = [];
+            document.getElementById("emojiContainer").innerHTML = '';
+            updateEmojis();
+        }
+
+        function createLovePage() {
+            let name = document.getElementById("nameInput").value.trim();
+            const errorMessage = document.getElementById("errorMessage");
+            
+            if (!name) {
+                errorMessage.classList.add("show");
+                return;
+            }
+            errorMessage.classList.remove("show");
+
+            const heartEmoji = '<img src="https://cdn.discordapp.com/emojis/1293988399656603648.webp?size=48" class="emoji-img">';
+            
+            // Проверяем специальные варианты имени
+            const specialNames = ["Гаечка", "Гае4ка", "Gaechka", "Gae4ka"];
+            const isSpecialName = specialNames.includes(name);
+
+            const messages = isSpecialName ? Array(5).fill("ERM") : [
+                `Ты важный для меня человек, ${name}`,
+                `Ты живёшь в моем сердце ${heartEmoji} ${name} ${heartEmoji}`,
+                `Хочу слушать твои стоны... ой... голос вечно ${name}`,
+                `Нет никого милее тебя ${name}`,
+                `Ты самое дорого что есть у меня, ${name} ${heartEmoji}`,
+                'Ты - моя причина улыбаться',
+                'В чём смысл моей жизни, если в ней не будет тебя?',
+                'Мне срочно нужны твои обнимашки и поцелуи UwU',
+                'Моё чудо - ТЫ',
+                'Моя любимая песня - твой голосок <3'
+            ];
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            const selectedMessages = shuffleArray([...messages]).slice(0, 5);
+
+            function getRandomImage() {
+                const images = [
+                    'rngimg/1.jpg',
+                    'rngimg/2.jpg',
+                    'rngimg/3.jpg',
+                    'rngimg/4.jpg',
+                    'rngimg/5.jpg',
+                    'rngimg/6.jpg',
+                    'rngimg/7.jpg',
+                    'rngimg/8.jpg',
+                    'rngimg/9.jpg',
+                    'rngimg/10.jpg'
+                ];
+                return images[Math.floor(Math.random() * images.length)];
+            }
+
+            function openRandomImage() {
+                const imgPath = getRandomImage();
+                const imgWindow = window.open('', '_blank');
+                imgWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>💕</title>
+                        <style>
+                            body {
+                                margin: 0;
+                                padding: 0;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                min-height: 100vh;
+                                background-color: #000;
+                            }
+                            img {
+                                max-width: 100%;
+                                max-height: 100vh;
+                                object-fit: contain;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <img src="${imgPath}" alt="Love Image">
+                    </body>
+                    </html>
+                `);
+                imgWindow.document.close();
+            }
+
+            let lovePageHTML = `
+                <!DOCTYPE html>
+                <html lang="ru">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Для тебя, ${name} ${heartEmoji}</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            text-align: center;
+                            background-color: #ffccd5;
+                            margin: 0;
+                            padding: 50px;
+                            min-height: 100vh;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            background-image: linear-gradient(45deg, #ffccd5 25%, #ffd8e3 25%, #ffd8e3 50%, #ffccd5 50%, #ffccd5 75%, #ffd8e3 75%, #ffd8e3 100%);
+                            background-size: 56.57px 56.57px;
+                            animation: gradient-move 3s linear infinite;
+                        }
+                        @keyframes gradient-move {
+                            0% { background-position: 0 0; }
+                            100% { background-position: 56.57px 0; }
+                        }
+                        .message-container {
+                            background-color: rgba(255, 255, 255, 0.9);
+                            padding: 40px;
+                            border-radius: 20px;
+                            backdrop-filter: blur(5px);
+                            max-width: 600px;
+                            margin: 0 auto;
+                            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                            transform-style: preserve-3d;
+                            perspective: 1000px;
+                            position: relative;
+                        }
+                        .subtle-message {
+                            position: absolute;
+                            top: 20px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            color: rgba(214, 51, 108, 0.15);
+                            font-size: 18px;
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            letter-spacing: 2px;
+                            white-space: nowrap;
+                            font-family: 'Courier New', monospace;
+                        }
+                        h1 {
+                            color: #d6336c;
+                            margin-bottom: 30px;
+                            font-size: 32px;
+                            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+                        }
+                        p {
+                            font-size: 22px;
+                            color: #a61e4d;
+                            margin: 25px 0;
+                            line-height: 1.6;
+                            letter-spacing: 0.5px;
+                        }
+                        .message {
+                            animation: fadeIn 1s ease-in;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 10px;
+                            padding: 15px;
+                            border-radius: 10px;
+                            background-color: rgba(255, 255, 255, 0.5);
+                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+                            transition: transform 0.3s ease;
+                            cursor: pointer;
+                        }
+                        .message:not(.footer-message) {
+                            cursor: pointer;
+                        }
+                        .message:not(.footer-message):hover {
+                            transform: translateY(-5px) rotateX(5deg);
+                            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+                            background-color: rgba(255, 255, 255, 0.7);
+                        }
+                        .footer-message {
+                            cursor: default;
+                        }
+                        .emoji-img {
+                            vertical-align: middle;
+                            width: 28px;
+                            height: 28px;
+                            animation: pulse 1.5s infinite;
+                        }
+                        @keyframes pulse {
+                            0% { transform: scale(1); }
+                            50% { transform: scale(1.2); }
+                            100% { transform: scale(1); }
+                        }
+                        .footer-message {
+                            margin-top: 40px;
+                            font-style: italic;
+                            color: #d6336c;
+                            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="message-container">
+                        <div class="subtle-message">fuck february 14 i love u everyday</div>
+                        <h1>Для тебя, ${name} ${heartEmoji}</h1>
+                        ${selectedMessages.map((message, index) => 
+                            `<p class="message" style="animation-delay: ${index * 0.3}s" onclick="openRandomImage()">${message}</p>`
+                        ).join('')}
+                        <p class="message footer-message" style="animation-delay: 1.5s">
+                            Этот сайт исчезнет через 30 минут, но моя любовь к тебе — никогда! ${heartEmoji}
+                        </p>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            let loveWindow = window.open("", "_blank");
+            loveWindow.document.write(lovePageHTML);
+
+            setTimeout(() => {
+                loveWindow.close();
+            }, 1800000); // 30 минут
+        }
+
+        // Запускаем анимацию при загрузке страницы
+        document.addEventListener('DOMContentLoaded', startEmojiRain);
+        // Перезапускаем анимацию при изменении размера окна
+        window.addEventListener('resize', startEmojiRain);
+
+        // Добавляем обработчик Enter для поля ввода
+        document.getElementById('nameInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                createLovePage();
+            }
+        });
+    </script>
+</body>
+</html>
